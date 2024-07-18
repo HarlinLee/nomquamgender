@@ -3,7 +3,7 @@ import json
 import unidecode
 import numpy as np
 import pandas as pd
-
+import string
 
 with importlib.resources.open_text("nomquamgender", "name_data.json") as file:
     name_data = json.load(file)
