@@ -158,7 +158,7 @@ class NBGC():
             If a single name is given, it will be converted to a list. 
             Each name will be cast to a string, made lowercase, and stripped of leading and trailing whitespaces. 
             Diacritics will also be removed.
-            The full name will be used if found and if not found the name will be split on spaces and the first substring will be used.
+            The full name will be used if found and if not found the name will be split on spaces and the substrings (excluding the last) will be used.
         as_df (optional): bool
             False by default, if True annotations will be return as a pandas dataframe rather than a list of lists.
         
@@ -174,7 +174,11 @@ class NBGC():
         annotations = []
         for name in names:
             parsed = unidecode.unidecode(str(name)).lower().strip()
-            for used in [parsed, parsed.split(' ')[0]]:
+            nameparts = parsed.split(' ')
+            if len(nameparts) > 1:
+                # consider all name parts except for last 
+                nameparts = [x.strip().strip(string.punctuation) for x in nameparts[:-1]]
+            for used in [parsed] + nameparts:
                 try:
                     info = self.reference[used]
                     break
